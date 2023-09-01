@@ -2,9 +2,8 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
-    
-    workflow_dispatch:
+    branches: [ "master" ] 
+  workflow_dispatch:
 
 jobs:
 
@@ -14,20 +13,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-
-    - name: Generate the github tags
-      run: echo "this is the run number" ${{github.run_number}}
+      
+    - name: Set tag var
+      id: vars
+      run: echo "DOCKER_TAG=V${{github.run_number}} >> $GITHUB_OUTPUT
     # - name: Build the Docker image
-    #   run: cd ./info-api && docker build . --tag couplewhocode11/argocd-nodejs-app:${{github.run_number}}
+    #   run: cd ./info-api && docker build . --tag couplewhocode11/argocd-nodejs-app:"${{ env.FOO }}"
     # - name: List the image built
     #   run: docker images
     - name: Build and export
       uses: docker/build-push-action@v4
       with:
           context: ./info-api
-          tags: couplewhocode11/argocd-nodejs-app:${{github.run_number}}
+          tags: couplewhocode11/argocd-nodejs-app:${{ steps.vars.outputs.DOCKER_TAG }}
           outputs: type=docker,dest=/tmp/myimage.tar
       
     - name: Upload artifact
@@ -60,4 +61,4 @@ jobs:
           docker load --input /tmp/myimage.tar
           docker image ls -a    
       - name: Docker push image
-        run: docker push couplewhocode11/argocd-nodejs-app:${{github.run_number}}
+        run: docker push couplewhocode11/argocd-nodejs-app:${{ steps.vars.outputs.DOCKER_TAG }}
