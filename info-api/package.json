@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start" : "node ./src",
-    "build:image": "docker build -t couplewhocode11/argocd-nodejs-app:v1 .",
-    "push": "yarn build:image && docker push couplewhocode11/argocd-nodejs-app:v1"
+    "build:image": "docker build -t couplewhocode11/argocd-nodejs-app:v2 .",
+    "push": "yarn build:image && docker push couplewhocode11/argocd-nodejs-app:v2"
   },
   "keywords": [],
   "author": "",
