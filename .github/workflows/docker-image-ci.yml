@@ -16,10 +16,10 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-      
-    - name: Set tag var
+
+    - name: Set docker image tag var
       id: vars
-      run: echo "DOCKER_TAG=V${{github.run_number}} >> $GITHUB_OUTPUT
+      run: echo "DOCKER_TAG=V${{github.run_number}}" >> $GITHUB_OUTPUT
     # - name: Build the Docker image
     #   run: cd ./info-api && docker build . --tag couplewhocode11/argocd-nodejs-app:"${{ env.FOO }}"
     # - name: List the image built
