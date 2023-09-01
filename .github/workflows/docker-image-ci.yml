@@ -65,7 +65,7 @@ jobs:
 
   manifest_upddate:
       runs-on: ubuntu-latest
-
+      needs: push
       steps:
 
         - name: Download artifact
