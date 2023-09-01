@@ -5,6 +5,9 @@ on:
     branches: [ "master" ] 
   workflow_dispatch:
 
+env:
+  DOCKER_TAG: V${{github.run_number}}
+
 jobs:
 
   build:
@@ -19,16 +22,19 @@ jobs:
 
     - name: Set docker image tag var
       id: vars
-      run: echo "DOCKER_TAG=V${{github.run_number}}" >> $GITHUB_OUTPUT
+    # run: echo "DOCKER_TAG=V${{github.run_number}}" >> $GITHUB_OUTPUT
+      run: echo "Tag is set with value ${{ env.DOCKER_TAG }}"
+
     # - name: Build the Docker image
     #   run: cd ./info-api && docker build . --tag couplewhocode11/argocd-nodejs-app:"${{ env.FOO }}"
     # - name: List the image built
     #   run: docker images
+
     - name: Build and export
       uses: docker/build-push-action@v4
       with:
           context: ./info-api
-          tags: couplewhocode11/argocd-nodejs-app:${{ steps.vars.outputs.DOCKER_TAG }}
+          tags: couplewhocode11/argocd-nodejs-app:${{ env.DOCKER_TAG }}
           outputs: type=docker,dest=/tmp/myimage.tar
       
     - name: Upload artifact
@@ -61,7 +67,7 @@ jobs:
           docker load --input /tmp/myimage.tar
           docker image ls -a    
       - name: Docker push image
-        run: docker push couplewhocode11/argocd-nodejs-app:${{ steps.vars.outputs.DOCKER_TAG }}
+        run: docker push couplewhocode11/argocd-nodejs-app:${{ env.DOCKER_TAG }}
 
   manifest_upddate:
       runs-on: ubuntu-latest
@@ -76,7 +82,7 @@ jobs:
           run: echo "DOCKER_LINE=grep -n 'image' ./manifest/argocd-nodejs-app-depl.yml | cut -d ':' -f1" >> $GITHUB_OUTPUT
         
         - name: Update the manifest with the tag
-          run: sed -i "s/buildTag/${{ steps.vars.outputs.DOCKER_TAG }}/g"
+          run: sed -i "s/{{buildTag}}/${{ env.DOCKER_TAG }}/g"
 
         - name: Commit and push changes
           run: |
