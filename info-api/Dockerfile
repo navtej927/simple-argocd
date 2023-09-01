@@ -2,13 +2,13 @@ FROM node:alpine
 
 WORKDIR /usr/src/app
 
-COPY yarn.lock /app
-COPY package.json /app
+COPY package-lock.json .
+COPY package.json .
 
-RUN yarn install
+RUN npm i
 
 COPY . .
 
 EXPOSE 9090
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]

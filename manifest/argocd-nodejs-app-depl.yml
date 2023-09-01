@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name:  info-api
-        image:  couplewhocode11/argocd-nodejs-app:latest
+        image:  couplewhocode11/argocd-nodejs-app:v1
         ports:
         - containerPort:  9090
           name:  info-api
