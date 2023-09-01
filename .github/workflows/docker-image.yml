@@ -16,10 +16,12 @@ jobs:
     - uses: actions/checkout@v3
     - name: Generate the github tags
       run: echo "this is the run number" ${{github.run_number}}
-    #- name: Build the Docker image
-      #run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build the Docker image
+      run: docker build . --file ./info-api --tag couplewhocode11/argocd-nodejs-app:${{github.run_number}}
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Docker push image
+      run: docker push couplewhocode11/argocd-nodejs-app:${{github.run_number}}
