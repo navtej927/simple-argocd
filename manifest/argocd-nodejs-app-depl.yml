@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  info-api
+  namespace: default
+  labels:
+    app:  info-api
+spec:
+  selector:
+    matchLabels:
+      app: info-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  info-api
+    spec:
+      containers:
+      - name:  info-api
+        image:  argocd-nodejs-app:latest
+        ports:
+        - containerPort:  9090
+          name:  info-api
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: info-api-service
+  namespace: default
+spec:
+  selector:
+    app: info-api
+  type: NodePort
+  ports:
+  - name: info-api-service
+    protocol: TCP
+    port: 9090
+    targetPort: 9090
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
+    nodePort: 30000
