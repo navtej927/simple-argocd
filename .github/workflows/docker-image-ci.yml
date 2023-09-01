@@ -55,5 +55,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: List the image built
         run: docker images
+      - name: Load image
+        run: |
+          docker load --input /tmp/myimage.tar
+          docker image ls -a    
       - name: Docker push image
         run: docker push couplewhocode11/argocd-nodejs-app:${{github.run_number}}
