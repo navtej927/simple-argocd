@@ -62,3 +62,27 @@ jobs:
           docker image ls -a    
       - name: Docker push image
         run: docker push couplewhocode11/argocd-nodejs-app:${{ steps.vars.outputs.DOCKER_TAG }}
+
+  manifest_upddate:
+      runs-on: ubuntu-latest
+
+      steps:
+
+        - name: Download artifact
+          uses: actions/download-artifact@v3
+
+        - name: Get the manifest with the tag
+          id: vars
+          run: echo "DOCKER_LINE=grep -n 'image' ./manifest/argocd-nodejs-app-depl.yml | cut -d ':' -f1" >> $GITHUB_OUTPUT
+        
+        - name: Update the manifest with the tag
+          run: sed -i "s/buildTag/${{ steps.vars.outputs.DOCKER_TAG }}/g"
+
+        - name: Commit and push changes
+          run: |
+            git config --global user.name "BOT"
+            git config --global user.email "BOT@BOT.com"
+            git add -A
+            git commit -m "manifest update"
+            git push
+      
