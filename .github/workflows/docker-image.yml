@@ -17,11 +17,13 @@ jobs:
     - name: Generate the github tags
       run: echo "this is the run number" ${{github.run_number}}
     - name: Build the Docker image
-      run: docker build . --file ./info-api/Dockerfile --tag couplewhocode11/argocd-nodejs-app:${{github.run_number}}
+      run: cd ./info-api && docker build . --tag couplewhocode11/argocd-nodejs-app:${{github.run_number}}
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: List the image built
+      run: docker images
     - name: Docker push image
       run: docker push couplewhocode11/argocd-nodejs-app:${{github.run_number}}
