@@ -18,6 +18,8 @@ jobs:
       run: echo "this is the run number" ${{github.run_number}}
     - name: Build the Docker image
       run: cd ./info-api && docker build . --tag couplewhocode11/argocd-nodejs-app:${{github.run_number}}
+    - name: List the image built
+      run: docker images
     
   push:
       runs-on: ubuntu-latest
